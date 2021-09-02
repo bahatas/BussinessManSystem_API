@@ -1,0 +1,46 @@
+
+app:
+  local-url: http://localhost:${server.port}
+server:
+  port: 9090
+spring:
+  application:
+     name: business managements system rest
+  profiles:
+     active: default
+  datasource:
+     url: jdbc:postgresql://localhost:5432/businessMan
+     username: postgres
+     password: 2754
+     driver-class-name: org.postgresql.Driver
+     # data: classpath:data.sql
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: update
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          starttls:
+            enabled: true
+            required: true
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+    username: cybertekschool.email@gmail.com
+    password: Cybertekschool@2020
+security:
+  jwt:
+    secret-key: cybertek
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

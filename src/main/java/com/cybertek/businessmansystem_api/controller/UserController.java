@@ -2,15 +2,19 @@ package com.cybertek.businessmansystem_api.controller;
 
 
 import com.cybertek.businessmansystem_api.dto.UserDTO;
+import com.cybertek.businessmansystem_api.entity.ResponseWrapper;
 import com.cybertek.businessmansystem_api.service.RoleService;
 import com.cybertek.businessmansystem_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     @Autowired
@@ -18,15 +22,22 @@ public class UserController {
     @Autowired
     RoleService roleService;
 
-    @GetMapping("/create")
-    public String create(Model model) {
+    @GetMapping
+    public ResponseEntity<ResponseWrapper> create() { //readAll
 
-        model.addAttribute("user", new UserDTO());
-        model.addAttribute("roles", roleService.listAllRoles());
-        model.addAttribute("userList", userService.listAllUser());
+        List<UserDTO> result = userService.listAllUser();
 
-        return "pages/user/user-create";
+     return ResponseEntity.ok(new ResponseWrapper("Users succesfully retrieved",result));
     }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<ResponseWrapper> getUSerByName(@PathVariable("username") String username) { //readAll
+
+        UserDTO result = userService.findByUserName(username);
+
+        return ResponseEntity.ok(new ResponseWrapper("User succesfully retrieved",result));
+    }
+
 
     @PostMapping("/create")
     public String insertUser(Model model, UserDTO userDTO) {
