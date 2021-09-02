@@ -22,13 +22,18 @@ public class UserController {
     @Autowired
     RoleService roleService;
 
+
+
+    //readAll
     @GetMapping
-    public ResponseEntity<ResponseWrapper> create() { //readAll
+    public ResponseEntity<ResponseWrapper> create() {
 
         List<UserDTO> result = userService.listAllUser();
 
      return ResponseEntity.ok(new ResponseWrapper("Users succesfully retrieved",result));
     }
+
+
 
     @GetMapping("/{username}")
     public ResponseEntity<ResponseWrapper> getUSerByName(@PathVariable("username") String username) { //readAll
