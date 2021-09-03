@@ -34,7 +34,7 @@ public class ProjectController {
 
 
     @PostMapping("/create")
-    public String postCreateProject(ProjectDTO projectDTO){
+    public String postCreateProject(ProjectDTO projectDTO) throws Exception {
 
         projectService.save(projectDTO);
         userService.save(projectDTO.getAssignedManager());

@@ -35,6 +35,7 @@ public class UserController {
 
 
 
+    //get by username
     @GetMapping("/{username}")
     public ResponseEntity<ResponseWrapper> getUSerByName(@PathVariable("username") String username) { //readAll
 
@@ -44,11 +45,12 @@ public class UserController {
     }
 
 
+    //create user
     @PostMapping("/create")
-    public String insertUser(Model model, UserDTO userDTO) {
+    public ResponseEntity<ResponseWrapper>insertUser(@RequestBody UserDTO userDTO) throws Exception {
 
-        userService.save(userDTO);
-        return "redirect:/user/create";
+        UserDTO save = userService.save(userDTO);
+        return ResponseEntity.ok(new ResponseWrapper(  "User has been created",save));
     }
 
     @GetMapping("/update/{userName}")

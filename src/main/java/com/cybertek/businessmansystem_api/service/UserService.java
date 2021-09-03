@@ -13,7 +13,7 @@ public interface UserService {
 
     UserDTO findByUserName(String username);
 
-    void save(UserDTO userDTO);
+    UserDTO save(UserDTO userDTO) throws Exception;
 
     UserDTO update(UserDTO userDTO);
 

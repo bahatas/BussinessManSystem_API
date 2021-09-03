@@ -50,17 +50,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(UserDTO userDTO) {
+    public UserDTO save(UserDTO userDTO) throws Exception {
 
-        User user = mapperUtil.convert(userDTO,new User());
+        try{
+            User foundUser = userRepository.findByUserName(userDTO.getUserName());
+            if(foundUser!= null){
+                throw new Exception("User already exist");
+            }
+        }catch (Exception ignored){
 
+        }
+
+
+
+        User convertedUser = mapperUtil.convert(userDTO, new User());
+//        convert.setPassWord(passwordEncoder.encode(convert.getPassWord()));
         //encode password TODO
-        //user.setPassWord(passwordEncoder.encode(user.getPassWord()));
 
-        user.setInsertUserId(1L);//todo
-        user.setLastUpdateUserId(1L);//todo
-        user.setLastUpdateDateTime(LocalDateTime.now());
-        userRepository.save(user);
+
+        convertedUser.setInsertUserId(1L);//todo
+        convertedUser.setLastUpdateUserId(1L);//todo
+        convertedUser.setLastUpdateDateTime(LocalDateTime.now());//todo
+        userRepository.save(convertedUser);
+
+        return mapperUtil.convert(convertedUser,new UserDTO());
     }
 
     @Override
