@@ -5,6 +5,7 @@ import com.cybertek.businessmansystem_api.dto.UserDTO;
 import com.cybertek.businessmansystem_api.entity.ResponseWrapper;
 import com.cybertek.businessmansystem_api.service.RoleService;
 import com.cybertek.businessmansystem_api.service.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -53,28 +54,35 @@ public class UserController {
         return ResponseEntity.ok(new ResponseWrapper(  "User has been created",save));
     }
 
-    @GetMapping("/update/{userName}")
-    public String editUser(@PathVariable("userName") String username,Model model) {
-        model.addAttribute("updatedUser", userService.findByUserName(username));
-        model.addAttribute("userList", userService.listAllUser());
-        model.addAttribute("roles", roleService.listAllRoles());
+    //update user
+    @PutMapping("/update")
+    public ResponseEntity<ResponseWrapper> editUser(@RequestBody UserDTO userDTO ) {
+        UserDTO updatedUser = userService.update(userDTO);
 
-        return "pages/user/user-update";
+
+        return ResponseEntity.ok(new ResponseWrapper("User has been updated",updatedUser));
     }
 
-    @PostMapping("/update/{username}")
-    public String updateUser(Model model, @PathVariable("username") String username,UserDTO userDTO) {
-        userService.update(userDTO);
 
-        return "redirect:/user/create";
-    }
 
-    @GetMapping("/delete/{username}")
-    public String deleteUSer(Model model, @PathVariable("username") String username) {
+    @DeleteMapping("/delete/{username}")
+    public ResponseEntity<ResponseWrapper> deleteUSer(@PathVariable("username") String username) throws Exception {
+
 
 
         userService.delete(username);
 
-        return "redirect:/user/create";
+        return ResponseEntity.ok(new ResponseWrapper("User has been deleted"));
+    }
+
+    @GetMapping("/role")
+    public ResponseEntity<ResponseWrapper> readByRole(@RequestParam String role)  {
+
+
+
+        List<UserDTO> users = userService.listAllByRole(role);
+
+
+        return ResponseEntity.ok(new ResponseWrapper("Users Successfully retrieved by role",users));
     }
 }

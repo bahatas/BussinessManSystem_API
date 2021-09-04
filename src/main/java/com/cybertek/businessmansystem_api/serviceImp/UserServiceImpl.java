@@ -52,14 +52,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO save(UserDTO userDTO) throws Exception {
 
-        try{
+
             User foundUser = userRepository.findByUserName(userDTO.getUserName());
             if(foundUser!= null){
                 throw new Exception("User already exist");
             }
-        }catch (Exception ignored){
 
-        }
 
 
 
@@ -87,9 +85,9 @@ public class UserServiceImpl implements UserService {
         User convertedUser  = mapperUtil.convert(userDTO,new User());
 //        convertedUser.setPassWord(passwordEncoder.encode(convertedUser.getPassWord())); todo
         convertedUser.setId(userEnt.getId());
-        convertedUser.setInsertUserId(1L);//todo
-        convertedUser.setLastUpdateUserId(1L);//todo
-        convertedUser.setLastUpdateDateTime(LocalDateTime.now());
+//        convertedUser.setInsertUserId(1L);//todo
+//        convertedUser.setLastUpdateUserId(1L);//todo
+//        convertedUser.setLastUpdateDateTime(LocalDateTime.now());
 
 
 
@@ -101,10 +99,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(String username) {
+    public void delete(String username) throws Exception {
 
 
         User byUserName = userRepository.findByUserName(username);
+
+        if(byUserName!= null ){
+            throw new Exception("User Does Not exist");
+        }
+
+//        if(!checkIfUserCanBeDeleted(user)){
+//            throw new TicketingProjectException("User can not be deleted. It is linked by a project ot task");
+//        }
+
+        assert false;
+        byUserName.setUserName(byUserName.getUserName()+ "-"+ byUserName.getId());
+
         byUserName.setIsDeleted(true);
         userRepository.save(byUserName);
 

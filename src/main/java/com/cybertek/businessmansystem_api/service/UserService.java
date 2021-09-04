@@ -17,7 +17,7 @@ public interface UserService {
 
     UserDTO update(UserDTO userDTO);
 
-    void delete(String username);
+    void delete(String username) throws Exception;
 
     List<UserDTO> listAllByRole(String role);
 
