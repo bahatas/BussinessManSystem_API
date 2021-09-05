@@ -38,9 +38,9 @@ spring:
           writetimeout: 5000
     username: cybertekschool.email@gmail.com
     password: Cybertekschool@2020
-  security:
-    jwt:
-      secret-key: cybertek
-  springdoc:
-    swagger-ui:
-      path: /swagger-ui.html
+security:
+  jwt:
+    secret-key: cybertek
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
