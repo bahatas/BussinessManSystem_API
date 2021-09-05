@@ -2,19 +2,20 @@ package com.cybertek.businessmansystem_api.controller;
 
 
 import com.cybertek.businessmansystem_api.dto.TaskDTO;
+import com.cybertek.businessmansystem_api.entity.ResponseWrapper;
 import com.cybertek.businessmansystem_api.enums.Status;
 import com.cybertek.businessmansystem_api.service.ProjectService;
 import com.cybertek.businessmansystem_api.service.TaskService;
 import com.cybertek.businessmansystem_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/api/v1/tasks")
 public class TaskController {
 
     @Autowired
@@ -24,76 +25,92 @@ public class TaskController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/create")
-    public String createProject(Model model, TaskDTO taskDTO){
+    //READ ALL TASKS
+    @GetMapping
+    public ResponseEntity<ResponseWrapper> readAll() {
 
-        model.addAttribute("task",new TaskDTO());
-        model.addAttribute("projects",projectService.listAllProjects());
-        model.addAttribute("tasks",taskService.listAllTasks());
-        model.addAttribute("employees",userService.listAllByRole("employee"));
+        List<TaskDTO> tasks = taskService.listAllTasks();
 
 
-        return "/pages/task/task-create";
+        return ResponseEntity.ok(new ResponseWrapper("Successfully Retrieved All Tasks", tasks));
     }
 
-    @PostMapping("/create")
-    public String saveProject( TaskDTO taskDTO){
+    //READ BY ASSIGNED MANAGER
+    @GetMapping("/project-manager")
+    public ResponseEntity<ResponseWrapper> readyByAssignedManager() {
 
-       taskService.save(taskDTO);
+        List<TaskDTO> tasks = taskService.listAllTasksByProjectManager();
 
 
-        return "redirect:/task/create";
+        return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved tasks by project manager", tasks));
     }
 
 
-    @GetMapping("/update/{id}")
-    public String update(@PathVariable("id") Long id, TaskDTO taskDTO,Model model){
+    //READ BY ID
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseWrapper> updateSave(@PathVariable("id") Long id) {
 
-        model.addAttribute("task",new TaskDTO());
-        model.addAttribute("projects",projectService.listAllProjects());
-        model.addAttribute("tasks",taskService.listAllTasks());
-        model.addAttribute("employees",userService.listAllByRole("employee"));
-        model.addAttribute("taskToUpdate",taskService.findById(id));
 
-        return "/pages/task/task-update";
+        TaskDTO task = taskService.findById(id);
+
+        return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved task by id", task));
     }
 
-    @PostMapping("/update/{id}")
-    public String updateSave(@PathVariable("id") Long id, TaskDTO taskDTO){
-        taskService.update(taskDTO);
+    //CREATE TASK
+    @PostMapping()
+    public ResponseEntity<ResponseWrapper> create(@RequestBody TaskDTO taskDTO) {
 
-        return "redirect:/task/create";
+
+        TaskDTO task = taskService.save(taskDTO);
+
+
+        return ResponseEntity
+                .ok(new ResponseWrapper("Successfully task created", task));
     }
 
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id,TaskDTO taskDTO){
 
+    // DELETE TASK
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseWrapper> delete(@PathVariable("id") Long id) {
         taskService.delete(id);
 
-        return "redirect:/task/create";
+
+        return ResponseEntity
+                .ok(new ResponseWrapper("Successfully task DELETED"));
     }
+
+    // UPDATE TASK
+    @PutMapping
+    public ResponseEntity<ResponseWrapper> update(@RequestBody TaskDTO taskDTO) {
+        taskService.update(taskDTO);
+
+        TaskDTO task = taskService.findById(taskDTO.getId());
+
+
+        return ResponseEntity
+                .ok(new ResponseWrapper("Successfully task Updated",task));
+    }
+
+    //READ ALL NON COMPLETED TASKS
 
     @GetMapping("/employee")
-    public String getEmployee(Model model){
+    public ResponseEntity<ResponseWrapper> employeeReadAllNonCompletedTask() {
 
-        List<TaskDTO> taskList = taskService.listAllTasksBySttatusIsNot(Status.COMPLETE);
+        List<TaskDTO> tasks = taskService.listAllTasksBySttatusIsNot(Status.COMPLETE);
 
-        model.addAttribute("employeetasklist",taskList);
+        return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved non completed tasks of current user ",tasks));
 
-        return "/pages/employee/pending-task";
-    }
-
-
-    @GetMapping("/emloyee/edit/{id}")
-    public String edittask(Model model, @PathVariable("id") Long id) {
-        List<TaskDTO> taskList = taskService.listAllTasksBySttatusIsNot(Status.COMPLETE);
-        TaskDTO taskDTO = taskService.findById(id);
-
-        model.addAttribute("taskbyid", taskDTO);
-        model.addAttribute("employeetasklist", taskList);
-
-        return "/templates/pages/employee/edit-pendingtasks";
 
     }
 
+    @PutMapping("/employee/update")
+    public ResponseEntity<ResponseWrapper> employeeUpdateTask(@RequestBody TaskDTO taskDTO) {
+
+      taskService.updateStatus(taskDTO);
+      TaskDTO task = taskService.findById(taskDTO.getId());
+
+        return ResponseEntity.ok(new ResponseWrapper("Successfully retrieved non completed tasks of current user ",task));
+
+
+    }
 }

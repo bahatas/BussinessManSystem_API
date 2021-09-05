@@ -25,4 +25,5 @@ public interface ProjectService {
     List<ProjectDTO> readAllProjectDetails();
     List<ProjectDTO> listNonCompletedProjects();
 
+
 }

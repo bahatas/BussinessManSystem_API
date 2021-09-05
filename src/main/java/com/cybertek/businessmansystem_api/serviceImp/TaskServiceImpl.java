@@ -2,6 +2,7 @@ package com.cybertek.businessmansystem_api.serviceImp;
 
 import com.cybertek.businessmansystem_api.dto.ProjectDTO;
 import com.cybertek.businessmansystem_api.dto.TaskDTO;
+import com.cybertek.businessmansystem_api.entity.Project;
 import com.cybertek.businessmansystem_api.entity.Task;
 import com.cybertek.businessmansystem_api.enums.Status;
 import com.cybertek.businessmansystem_api.mapper.MapperUtil;
@@ -47,7 +48,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void save(TaskDTO taskDTO) {
+    public TaskDTO save(TaskDTO taskDTO) {
 
         Task taskEntity = mapperUtil.convert(taskDTO, new Task());
 
@@ -55,6 +56,7 @@ public class TaskServiceImpl implements TaskService {
         taskEntity.setAssignedDate(LocalDate.now());
         taskRepository.save(taskEntity);
 
+        return mapperUtil.convert(taskEntity,new TaskDTO());
     }
 
     @Override
@@ -68,27 +70,38 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void update(TaskDTO taskDTO) {
+    public TaskDTO update(TaskDTO taskDTO) {
 
         Task taskToUpdate = taskRepository.findById(taskDTO.getId()).get();
 
         taskToUpdate.setAssignedDate(LocalDate.now());
-        taskRepository.save(taskToUpdate);
+        Task save = taskRepository.save(taskToUpdate);
+
+        return mapperUtil.convert(save, new TaskDTO());
 
     }
 
     @Override
     public int totalNonCompletedTasks(String projectCode) {
-        return 0;
+
+        List<Task> allByTaskStatusIsNot = taskRepository.findAllByTaskStatusIsNot(Status.COMPLETE);
+
+        return allByTaskStatusIsNot.size();
     }
 
     @Override
     public int totalCompletedTask(String projectCode) {
-        return 0;
+      return  taskRepository.findAll().stream().filter(each->
+                each.getTaskStatus()==Status.COMPLETE).collect(Collectors.toList()).size();
     }
 
     @Override
     public List<TaskDTO> listAllByProject(ProjectDTO projectDTO) {
+        return null;
+    }
+
+    @Override
+    public List<TaskDTO> listAllTasksByProjectManager() {
         return null;
     }
 
@@ -100,8 +113,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDTO> listAllTasksByStatus(Status status) {
-        return null;
+    public List<TaskDTO> listAllTasksByStatus(String status) {
+        return taskRepository.findAll().stream()
+                .filter(each->each.getTaskStatus()==Status.valueOf(status)).collect(Collectors.toList())
+                .stream().map(each->mapperUtil.convert(each,new TaskDTO())).collect(Collectors.toList());
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.cybertek.businessmansystem_api.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
@@ -19,6 +20,8 @@ public class ResponseWrapper {
     public ResponseWrapper(String message, Object object) {
         this.message = message;
         this.object = object;
+        this.code = HttpStatus.OK.value();
+        this.success=true;
     }
 
     public ResponseWrapper(String message) {

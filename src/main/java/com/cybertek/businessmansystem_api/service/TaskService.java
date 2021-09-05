@@ -12,18 +12,19 @@ public interface TaskService {
 
     List<TaskDTO> listAllTasks();
     TaskDTO findById(Long id);
-    void save(TaskDTO taskDTO);
+    TaskDTO save(TaskDTO taskDTO);
     void delete(Long id);
-    void update(TaskDTO taskDTO);
+    TaskDTO update(TaskDTO taskDTO);
 
     int totalNonCompletedTasks(String projectCode);
     int totalCompletedTask(String projectCode);
 
     List<TaskDTO> listAllByProject(ProjectDTO projectDTO);
+    List<TaskDTO> listAllTasksByProjectManager();
 
     List<TaskDTO> listAllTasksBySttatusIsNot(Status status);
 
-    List<TaskDTO> listAllTasksByStatus(Status status);
+    List<TaskDTO> listAllTasksByStatus(String status);
 
     void updateStatus(TaskDTO taskDTO);
 

@@ -115,7 +115,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDTO> readAllProjectDetails() {
-        return null;
+
+        return null; // TODO
     }
 
     @Override
@@ -125,6 +126,8 @@ public class ProjectServiceImpl implements ProjectService {
                 .stream().map(each->mapperUtil.convert(each,new ProjectDTO()))
                 .collect(Collectors.toList());
     }
+
+
 
 
     @Override
