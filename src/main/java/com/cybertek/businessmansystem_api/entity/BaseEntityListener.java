@@ -1,8 +1,9 @@
 package com.cybertek.businessmansystem_api.entity;
 
 
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,11 @@ public class BaseEntityListener extends AuditingEntityListener {
         baseEntity.setInsertUserId(1L);
         baseEntity.setLastUpdateUserId(1L);
 
-        if(authentication != null && !authentication.getNam)
+        if(authentication != null && !authentication.getName().equals("anonymousUser")){
+            long id = Long.parseLong(authentication.getName());
+            baseEntity.insertUserId=id;
+            baseEntity.lastUpdateUserId=id;
+        }
 
 
     }
