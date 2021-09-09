@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/webjars/**"
-    }
+    };
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
