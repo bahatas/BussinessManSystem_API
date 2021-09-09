@@ -9,6 +9,7 @@ import com.cybertek.businessmansystem_api.mapper.MapperUtil;
 import com.cybertek.businessmansystem_api.service.UserService;
 import com.cybertek.businessmansystem_api.util.JWTUtil;
 import com.sun.xml.bind.v2.TODO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@Tag(name = "Authenetication Controller", description = "Auhtnetication API")
 public class LoginController {
 
     @Autowired
@@ -61,7 +62,8 @@ public class LoginController {
 
 
         String jwtToken = jwtUtil.generateToken(convertedUser);
-        return ResponseEntity.ok(new ResponseWrapper("login Successful", jwtToken));
+        //return ResponseEntity.ok(new ResponseWrapper("login Successful", jwtToken));
+        return ResponseEntity.ok(new ResponseWrapper("login Successful"));
     }
 
 
